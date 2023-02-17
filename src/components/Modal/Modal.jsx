@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import css from './Modal.module.css';
 
@@ -8,11 +8,14 @@ const Modal = ({ onToggleModal, children }) => {
       onToggleModal();
     }
   };
-  const onEscClose = e => {
-    if (e.code === 'Escape') {
-      onToggleModal();
-    }
-  };
+  const onEscClose = useCallback(
+    e => {
+      if (e.code === 'Escape') {
+        onToggleModal();
+      }
+    },
+    [onToggleModal]
+  );
 
   useEffect(() => {
     window.addEventListener('keydown', onEscClose);
@@ -20,7 +23,7 @@ const Modal = ({ onToggleModal, children }) => {
     return () => {
       window.removeEventListener('keydown', onEscClose);
     };
-  }, []);
+  }, [onEscClose]);
   return (
     <div className={css.overlay} onClick={onClickHehdler}>
       <div className={css.modal}>{children}</div>
