@@ -1,36 +1,32 @@
-import React from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import css from './Modal.module.css';
 
-class Modal extends React.Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.onEscClose);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEscClose);
-  }
-
-  onClickHehdler = e => {
+const Modal = ({ onToggleModal, children }) => {
+  const onClickHehdler = e => {
     if (e.target === e.currentTarget) {
-      this.props.onToggleModal();
+      onToggleModal();
     }
   };
-
-  onEscClose = e => {
+  const onEscClose = e => {
     if (e.code === 'Escape') {
-      this.props.onToggleModal();
+      onToggleModal();
     }
   };
 
-  render() {
-    return (
-      <div className={css.overlay} onClick={this.onClickHehdler}>
-        <div className={css.modal}>{this.props.children}</div>
-      </div>
-    );
-  }
-}
+  useEffect(() => {
+    window.addEventListener('keydown', onEscClose);
+
+    return () => {
+      window.removeEventListener('keydown', onEscClose);
+    };
+  }, []);
+  return (
+    <div className={css.overlay} onClick={onClickHehdler}>
+      <div className={css.modal}>{children}</div>
+    </div>
+  );
+};
 
 Modal.propTypes = {
   onToggleModal: PropTypes.func.isRequired,
