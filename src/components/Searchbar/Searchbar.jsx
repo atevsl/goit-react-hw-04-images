@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './Searchbar.module.css';
+import Notiflix from 'notiflix';
 
 const Searchbar = ({ onSubmitHendler }) => {
-  const [state, setState] = useState({
-    imgName: '',
-  });
+  const [imgName, setImgName] = useState('');
 
   const onInputHendler = e => {
-    setState({ imgName: e.currentTarget.value });
+    setImgName(e.currentTarget.value);
   };
 
   const SubmitHendler = e => {
     e.preventDefault();
-    onSubmitHendler(state.imgName);
-    setState({ imgName: '' });
+    if (imgName.trim() === '') {
+      return Notiflix.Notify.failure('Please type search and try again.');
+    }
+    onSubmitHendler(imgName);
+    setImgName('');
   };
 
   return (
@@ -30,7 +32,7 @@ const Searchbar = ({ onSubmitHendler }) => {
           autoComplete="off"
           autoFocus
           placeholder="Search images and photos"
-          value={state.imgName}
+          value={imgName}
           onChange={onInputHendler}
         />
       </form>

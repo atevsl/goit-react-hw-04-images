@@ -35,8 +35,9 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (imgSearchName.trim() === '') {
-      return setStatus(Status.IDLE);
+    if (!imgSearchName) {
+      setStatus(Status.IDLE);
+      return;
     }
     setStatus(Status.PENDING);
     onFetchHendler(imgSearchName, page)
